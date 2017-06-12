@@ -6,8 +6,9 @@ from numpy import newaxis
 from keras.layers.core import Dense, Activation, Dropout
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential
+import pdb
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' #Hide messy TensorFlow warnings
+#os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' #Hide messy TensorFlow warnings
 warnings.filterwarnings("ignore") #Hide messy Numpy warnings
 
 def load_data(filename, seq_len, normalise_window):
@@ -23,7 +24,7 @@ def load_data(filename, seq_len, normalise_window):
         result = normalise_windows(result)
 
     result = np.array(result)
-
+    pdb.set_trace()
     row = round(0.9 * result.shape[0])
     train = result[:int(row), :]
     np.random.shuffle(train)
