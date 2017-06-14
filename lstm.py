@@ -6,7 +6,6 @@ from numpy import newaxis
 from keras.layers.core import Dense, Activation, Dropout
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential
-import pdb
 
 #os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' #Hide messy TensorFlow warnings
 warnings.filterwarnings("ignore") #Hide messy Numpy warnings
@@ -24,7 +23,6 @@ def load_data(filename, seq_len, normalise_window):
         result = normalise_windows(result)
 
     result = np.array(result)
-    pdb.set_trace()
     row = round(0.9 * result.shape[0])
     train = result[:int(row), :]
     np.random.shuffle(train)
@@ -52,11 +50,13 @@ def build_model(layers):
         input_shape=(layers[1], layers[0]),
         output_dim=layers[1],
         return_sequences=True))
+    model.add(Activation("tanh"))
     model.add(Dropout(0.2))
 
     model.add(LSTM(
         layers[2],
         return_sequences=False))
+    #model.add(Activation("tanh"))
     model.add(Dropout(0.2))
 
     model.add(Dense(

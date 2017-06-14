@@ -1,3 +1,7 @@
+# MLP 3 layer network: input - hidden - outer
+# based on:
+# http://iamtrask.github.io/2015/07/12/basic-python-network/
+
 import numpy as np
 
 def activation(x,deriv=False):

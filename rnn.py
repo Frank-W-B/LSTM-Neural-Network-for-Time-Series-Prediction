@@ -71,20 +71,20 @@ pts_per_cycle = 50 # number of points per cycle
 seq_len = 8  # number of datapoints in the training window
 train_size = 0.8 # fraction of data set (from beginning) used to train
 
-# simulation parameters
-np.random.seed(1)
-alpha = 0.1 # learning rate
-num_epochs = 200 # number of epochs
+## simulation parameters
+#np.random.seed(1)
+#alpha = 0.1 # learning rate
+#num_epochs = 200 # number of epochs
+#
+## make network geometry 
+#nodes_input  = FILL_THIS_IN   # this is the sequence training window
+#nodes_hidden = 8 
+#nodes_target = 1
 
-# make network geometry 
-nodes_input  = FILL_THIS_IN   # this is the sequence training window
-nodes_hidden = 8 
-nodes_target = 1
-
-# initialize weights 
-Wxh = 2*np.random.uniform(size=(nodes_input, nodes_hidden)) - 1
-Whh = FILL_THIS_IN
-Why = 2*np.random.uniform(size=(nodes_hidden, nodes_target)) - 1
+## initialize weights 
+#Wxh = 2*np.random.uniform(size=(nodes_input, nodes_hidden)) - 1
+#Whh = FILL_THIS_IN
+#Why = 2*np.random.uniform(size=(nodes_hidden, nodes_target)) - 1
 
 # make the data and visualize it
 x, sinewave = make_sine_wave(cycles, pts_per_cycle)
@@ -93,71 +93,71 @@ plot_train_test(x, sinewave, train_size) # to check
 X_train, y_train, X_test, y_test = make_train_test_seqs(sinewave, seq_len, train_size)
 
 
-# training
-print("\nTraining:")
-H_prev = np.zeros((1, nodes_hidden))
-H_delta_fut = np.zeros(nodes_hidden)
-for e in range(num_epochs):
-    error_lst = [] # differences between target and predictions
-    for X, y in zip(X_train, y_train):
-        X = X.reshape((1, X.shape[0])) # for row, column shape
-        y = y.reshape((1,1))
-        # Feed forward 
-        H = activation(np.dot(X,Wxh) + FILL_THIS_IN )
-        yp = activation(np.dot(H,Why))
-        # Back propogate to find gradients
-        # Why gradients 
-        yp_error = y - yp
-        yp_delta = yp_error*activation(yp,deriv=True)
-        grad_Why = np.dot(H.T, yp_delta)
-        # Wxh gradients 
-        H_error = np.dot(yp_delta, Why.T) +  FILL_THIS_IN
-        H_delta = H_error * activation(H,deriv=True)
-        #H_delta_fut = np.copy(H_delta) crashes simulation
-        grad_Wxh = np.dot(X.T, H_delta)
-        # Whh gradients
-        grad_Whh = FILL_THIS_IN
-        # Use gradient descent to update weights
-        Why += alpha * grad_Why
-        Whh += FILL_THIS_IN
-        Wxh += alpha * grad_Wxh
-        # save for future use
-        H_prev = np.copy(H)
-        error_lst.append(np.abs(yp_error[0][0]))
-    
-    epoch_error = np.mean(error_lst).round(4)
-    if (e % int(num_epochs/20)) == 0:
-        print("Epoch: {0:<8s} Error: {1}".format(str(e), epoch_error))
-
-print("Simulation finished.")
-print("Testing.")
-
-# Test on test set - just predict 1 ahead
-yp_lst = [] # predictions
-H_prev = np.zeros((1, nodes_hidden))
-for X in X_test:
-    X = X.reshape((1, X.shape[0])) # for row, column shape
-    # Feed forward 
-    H = activation(np.dot(X,Wxh) + np.dot(H_prev,Whh))
-    yp = activation(np.dot(H,Why))
-    yp_lst.append(yp[0][0])
-    H_prev = np.copy(H)
-
-plot_predict_vs_test(yp_lst, y_test, 'Test - only plotting 1 ahead')
-
-# Test on test set - after initial seed predict all the rest
-yp_lst = [] # predictions
-H_prev = np.zeros((1, nodes_hidden))
-for i in range(X_test.shape[0]):
-    if i == 1:
-        X = X_test[0]
-        X = X.reshape((1, X.shape[0]))
-    # Feed forward 
-    H = activation(np.dot(X,Wxh) + np.dot(H_prev,Whh))
-    yp = activation(np.dot(H,Why))
-    yp_lst.append(yp[0][0])
-    H_prev = np.copy(H)
-    X = np.append(X[:,1:], yp[0]).reshape((1, nodes_input))
-
-plot_predict_vs_test(yp_lst, y_test, 'Test - predicting entire test after seed')
+## training
+#print("\nTraining:")
+#H_prev = np.zeros((1, nodes_hidden))
+#H_delta_fut = np.zeros(nodes_hidden)
+#for e in range(num_epochs):
+#    error_lst = [] # differences between target and predictions
+#    for X, y in zip(X_train, y_train):
+#        X = X.reshape((1, X.shape[0])) # for row, column shape
+#        y = y.reshape((1,1))
+#        # Feed forward 
+#        H = activation(np.dot(X,Wxh) + FILL_THIS_IN )
+#        yp = activation(np.dot(H,Why))
+#        # Back propogate to find gradients
+#        # Why gradients 
+#        yp_error = y - yp
+#        yp_delta = yp_error*activation(yp,deriv=True)
+#        grad_Why = np.dot(H.T, yp_delta)
+#        # Wxh gradients 
+#        H_error = np.dot(yp_delta, Why.T) +  FILL_THIS_IN
+#        H_delta = H_error * activation(H,deriv=True)
+#        #H_delta_fut = np.copy(H_delta) crashes simulation
+#        grad_Wxh = np.dot(X.T, H_delta)
+#        # Whh gradients
+#        grad_Whh = FILL_THIS_IN
+#        # Use gradient descent to update weights
+#        Why += alpha * grad_Why
+#        Whh += FILL_THIS_IN
+#        Wxh += alpha * grad_Wxh
+#        # save for future use
+#        H_prev = np.copy(H)
+#        error_lst.append(np.abs(yp_error[0][0]))
+#    
+#    epoch_error = np.mean(error_lst).round(4)
+#    if (e % int(num_epochs/20)) == 0:
+#        print("Epoch: {0:<8s} Error: {1}".format(str(e), epoch_error))
+#
+#print("Simulation finished.")
+#print("Testing.")
+#
+## Test on test set - just predict 1 ahead
+#yp_lst = [] # predictions
+#H_prev = np.zeros((1, nodes_hidden))
+#for X in X_test:
+#    X = X.reshape((1, X.shape[0])) # for row, column shape
+#    # Feed forward 
+#    H = activation(np.dot(X,Wxh) + np.dot(H_prev,Whh))
+#    yp = activation(np.dot(H,Why))
+#    yp_lst.append(yp[0][0])
+#    H_prev = np.copy(H)
+#
+#plot_predict_vs_test(yp_lst, y_test, 'Test - only plotting 1 ahead')
+#
+## Test on test set - after initial seed predict all the rest
+#yp_lst = [] # predictions
+#H_prev = np.zeros((1, nodes_hidden))
+#for i in range(X_test.shape[0]):
+#    if i == 1:
+#        X = X_test[0]
+#        X = X.reshape((1, X.shape[0]))
+#    # Feed forward 
+#    H = activation(np.dot(X,Wxh) + np.dot(H_prev,Whh))
+#    yp = activation(np.dot(H,Why))
+#    yp_lst.append(yp[0][0])
+#    H_prev = np.copy(H)
+#    X = np.append(X[:,1:], yp[0]).reshape((1, nodes_input))
+#
+#plot_predict_vs_test(yp_lst, y_test, 'Test - predicting entire test after seed')
 
